@@ -1,0 +1,20 @@
+query CartLinesDiscountsGenerateRun {
+  cart {
+    lines {
+      id
+      quantity
+      cost {
+        subtotalAmount {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+  discount {
+    discountClasses
+    metafield(namespace: "$app:prepaid_discount", key: "config") {
+      value
+    }
+  }
+}

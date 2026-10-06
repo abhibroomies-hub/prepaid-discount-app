@@ -1,0 +1,13 @@
+query CartDeliveryOptionsDiscountsGenerateRun {
+  cart {
+    deliveryGroups {
+      id
+    }
+  }
+  discount {
+    discountClasses
+    metafield(namespace: "$app:prepaid_discount", key: "config") {
+      value
+    }
+  }
+}

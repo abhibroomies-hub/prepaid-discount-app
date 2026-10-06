@@ -1,9 +1,19 @@
 import { shopifyApp } from "@shopify/shopify-app-remix/server";
 import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
 
-// NOTE: Memory storage = Vercel-safe build (no native sqlite dep).
-// Sessions reset on redeploy/cold start — fine for demo/dev.
-// Production: switch to Prisma/Postgres or Redis storage.
+// NOTE: Memory storage = Vercel-safe (no native sqlite dep, no persistent disk needed).
+// No Prisma/SQLite in this project — sessions live in memory per serverless instance.
+// If SHOPIFY_API_KEY / SHOPIFY_API_SECRET / SHOPIFY_APP_URL are missing, throw a
+// clear error at boot instead of a cryptic 500 inside the Admin iframe.
+const missing = ["SHOPIFY_API_KEY", "SHOPIFY_API_SECRET", "SHOPIFY_APP_URL"].filter(
+  (k) => !process.env[k],
+);
+if (missing.length > 0) {
+  throw new Error(
+    `[shopify.server] Missing required env vars: ${missing.join(", ")}. ` +
+      `Set them in Vercel Dashboard > Project > Settings > Environment Variables (and .env locally).`,
+  );
+}
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,

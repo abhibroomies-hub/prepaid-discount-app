@@ -1,4 +1,23 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from "@remix-run/react";
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <title>App error</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <h1>App error</h1>
+        <pre>{error instanceof Error ? error.message : JSON.stringify(error)}</pre>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
 
 export default function App() {
   return (

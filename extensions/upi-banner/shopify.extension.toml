@@ -1,4 +1,5 @@
 api_version = "2025-07"
+uid = "22ec4e2d-32d3-fb2e-6879-99438ef23ee1f6124109"
 
 [[extensions]]
 type = "ui_extension"

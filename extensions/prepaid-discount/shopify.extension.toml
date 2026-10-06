@@ -1,26 +1,29 @@
 api_version = "2025-07"
 uid = "ae5f1096-268a-c8a0-5194-9f1adccdc72ca4e7c1ad"
 
-[build]
-command = ""
-
 [[extensions]]
-type = "order_discounts"
+type = "function"
 name = "prepaid-discount"
 handle = "prepaid-discount"
 description = "Dynamic prepaid discount - percentage from app metafield (namespace: prepaid_discount, key: config)"
 
   [[extensions.targeting]]
-  module = "./src/run.js"
-  target = "purchase.order-discount.run"
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart-lines-discounts-generate-run"
 
-  [extensions.targeting.input]
-  query = "./src/run.graphql"
+  [[extensions.targeting]]
+  target = "cart.delivery-options.discounts.generate.run"
+  input_query = "src/cart_delivery_options_discounts_generate_run.graphql"
+  export = "cart-delivery-options-discounts-generate-run"
 
-  [extensions.targeting.output]
+[extensions.build]
+command = ""
+path = "dist/function.wasm"
+typegen_command = "node -e \"process.exit(0)\""
 
   # App-owned metafield for function configuration (Admin Dashboard writes via metafieldsSet)
-  [[extensions.metafields]]
+  [extensions.input.variables]
   namespace = "$app:prepaid_discount"
   key = "config"
 

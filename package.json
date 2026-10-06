@@ -16,6 +16,7 @@
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
+    "@shopify/app-bridge-react": "^3.7.12",
     "@shopify/polaris": "^13.9.5",
     "@shopify/shopify-app-remix": "^3.4.0",
     "@shopify/shopify-app-session-storage-memory": "^6.0.0",
@@ -29,7 +30,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.2",
-    "@shopify/cli": "^3.82.0",
+    "@shopify/cli": "^4.8.4",
     "vite": "^5.4.8"
   },
   "engines": {
