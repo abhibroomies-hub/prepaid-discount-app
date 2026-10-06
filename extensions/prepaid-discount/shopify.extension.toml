@@ -1,4 +1,8 @@
 api_version = "2025-07"
+uid = "ae5f1096-268a-c8a0-5194-9f1adccdc72ca4e7c1ad"
+
+[build]
+command = ""
 
 [[extensions]]
 type = "order_discounts"
