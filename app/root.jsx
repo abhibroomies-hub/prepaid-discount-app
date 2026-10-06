@@ -1,4 +1,30 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from "@remix-run/react";
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+} from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { addDocumentResponseHeaders } from "./shopify.server";
+
+// Allow Shopify Admin iframe embedding (CSP frame-ancestors).
+export const headers = (headersArgs) => {
+  return addDocumentResponseHeaders(headersArgs);
+};
+
+// Root loader always returns valid JSON, even while env/session-token init
+// is still warming up on a cold Vercel serverless instance.
+export const loader = async () => {
+  try {
+    return json({ apiKey: process.env.SHOPIFY_API_KEY || "" });
+  } catch (error) {
+    console.error("[root loader] failed, returning fallback JSON:", error);
+    return json({ apiKey: "", rootError: true });
+  }
+};
 
 export function ErrorBoundary() {
   const error = useRouteError();

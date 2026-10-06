@@ -1,20 +1,40 @@
 import { json } from "@remix-run/node";
-import { authenticate } from "../shopify.server";
+import { authenticate, addDocumentResponseHeaders } from "../shopify.server";
 import {
   getShopConfig,
   saveShopConfig,
 } from "../prepaid-discount-config.server";
+import { DEFAULT_CONFIG } from "../prepaid-discount-config.js";
+
+// Allow Shopify Admin iframe embedding (CSP frame-ancestors).
+export const headers = (headersArgs) => {
+  return addDocumentResponseHeaders(headersArgs);
+};
 
 // ---------- Loader: read current config from shop metafield ----------
 export const loader = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
-  const config = await getShopConfig(admin);
-  return json({ config });
+  try {
+    const { admin } = await authenticate.admin(request);
+    const config = await getShopConfig(admin);
+    return json({ config });
+  } catch (error) {
+    // Preserve OAuth / session-token redirects.
+    if (error instanceof Response) throw error;
+    console.error("[app._index loader] failed, returning default config JSON:", error);
+    return json({ config: DEFAULT_CONFIG, loaderError: true });
+  }
 };
 
 // ---------- Action: save config via Admin GraphQL metafieldsSet ----------
 export const action = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
+  let admin;
+  try {
+    ({ admin } = await authenticate.admin(request));
+  } catch (error) {
+    if (error instanceof Response) throw error;
+    console.error("[app._index action] auth failed:", error);
+    return json({ ok: false, error: "Not authenticated. Re-open the app from Shopify Admin." }, { status: 401 });
+  }
   const formData = await request.formData();
   const enabledRaw = formData.get("enabled");
   try {
@@ -39,10 +59,9 @@ import {
   Page, Layout, Card, Form, FormLayout, TextField,
   Checkbox, Button, Banner, BlockStack, Text,
 } from "@shopify/polaris";
-import { DEFAULT_CONFIG } from "../prepaid-discount-config.js";
 
 export default function Dashboard() {
-  const { config } = useLoaderData();
+  const { config } = useLoaderData() ?? {};
   const actionData = useActionData();
   const submit = useSubmit();
   const navigation = useNavigation();

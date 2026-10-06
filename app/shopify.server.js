@@ -3,24 +3,30 @@ import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memor
 
 // NOTE: Memory storage = Vercel-safe (no native sqlite dep, no persistent disk needed).
 // No Prisma/SQLite in this project — sessions live in memory per serverless instance.
-// If SHOPIFY_API_KEY / SHOPIFY_API_SECRET / SHOPIFY_APP_URL are missing, throw a
-// clear error at boot instead of a cryptic 500 inside the Admin iframe.
+// Vercel-safe: NEVER throw at module import time. A top-level throw becomes
+// "500 FUNCTION_INVOCATION_FAILED" for every route inside the Admin iframe.
+// Missing env vars are logged as a warning and filled with build-safe placeholders
+// so the server bundle boots; per-request loaders still return valid JSON.
 const missing = ["SHOPIFY_API_KEY", "SHOPIFY_API_SECRET", "SHOPIFY_APP_URL"].filter(
   (k) => !process.env[k],
 );
 if (missing.length > 0) {
-  throw new Error(
-    `[shopify.server] Missing required env vars: ${missing.join(", ")}. ` +
-      `Set them in Vercel Dashboard > Project > Settings > Environment Variables (and .env locally).`,
+  console.warn(
+    `[shopify.server] Missing env vars (using fallback placeholders, fix in Vercel Dashboard > Project > Settings > Environment Variables): ${missing.join(", ")}`,
   );
 }
 
+const apiKey = process.env.SHOPIFY_API_KEY || "missing-api-key";
+const apiSecretKey =
+  process.env.SHOPIFY_API_SECRET || "missing-api-secret-build-placeholder-only";
+const appUrl = process.env.SHOPIFY_APP_URL || "https://example.com";
+
 const shopify = shopifyApp({
-  apiKey: process.env.SHOPIFY_API_KEY,
-  apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
+  apiKey,
+  apiSecretKey,
   apiVersion: "2025-07",
   scopes: (process.env.SCOPES || "read_products,write_discounts,read_discounts,read_shop,write_shop").split(","),
-  appUrl: process.env.SHOPIFY_APP_URL || "http://localhost:3000",
+  appUrl,
   authPathPrefix: "/auth",
   sessionStorage: new MemorySessionStorage(),
   distribution: "AppStore",
