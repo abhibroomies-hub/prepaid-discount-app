@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+build/
+public/build/
+.shopify/
+
+# SQLite dev database
+*.sqlite
+*.sqlite-journal
+database.sqlite*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Vercel
+.vercel/

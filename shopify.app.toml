@@ -1,0 +1,26 @@
+# Learn more about configuring your app: https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "00000000000000000000000000000000"
+name = "prepaid-discount-app"
+handle = "prepaid-discount-app"
+application_url = "http://localhost:3000"
+embedded = true
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+dev_store_url = "your-dev-store.myshopify.com"
+
+[auth]
+redirect_urls = ["http://localhost:3000/auth/callback", "http://localhost:3000/auth/session-token"]
+
+[webhooks]
+api_version = "2025-07"
+
+[access_scopes]
+# Needed to read/write shop metafields (namespace: prepaid_discount, key: config)
+scopes = "read_products,write_discounts,read_discounts,read_shop,write_shop"
+
+[pos]
+embedded = false
+

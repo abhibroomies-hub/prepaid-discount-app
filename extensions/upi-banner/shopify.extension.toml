@@ -1,0 +1,17 @@
+api_version = "2025-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "upi-banner"
+handle = "upi-banner"
+description = "Dynamic prepaid / UPI offer banner - title + subtitle from shop metafield (prepaid_discount.config)"
+
+  [[extensions.targeting]]
+  module = "./src/Checkout.jsx"
+  target = "purchase.checkout.block.render"
+
+  # Allow checkout UI to read shop metafield for dynamic banner text
+  [[extensions.metafields]]
+  namespace = "prepaid_discount"
+  key = "config"
+

@@ -1,0 +1,22 @@
+api_version = "2025-07"
+
+[[extensions]]
+type = "order_discounts"
+name = "prepaid-discount"
+handle = "prepaid-discount"
+description = "Dynamic prepaid discount - percentage from app metafield (namespace: prepaid_discount, key: config)"
+
+  [[extensions.targeting]]
+  module = "./src/run.js"
+  target = "purchase.order-discount.run"
+
+  [extensions.targeting.input]
+  query = "./src/run.graphql"
+
+  [extensions.targeting.output]
+
+  # App-owned metafield for function configuration (Admin Dashboard writes via metafieldsSet)
+  [[extensions.metafields]]
+  namespace = "$app:prepaid_discount"
+  key = "config"
+

@@ -1,0 +1,16 @@
+query RunInput {
+  cart {
+    cost {
+      subtotalAmount {
+        amount
+        currencyCode
+      }
+    }
+  }
+  discountNode {
+    metafield(namespace: "$app:prepaid_discount", key: "config") {
+      value
+    }
+  }
+}
+
