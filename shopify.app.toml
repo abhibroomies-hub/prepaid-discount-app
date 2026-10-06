@@ -1,6 +1,6 @@
 # Learn more about configuring your app: https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "00000000000000000000000000000000"
+client_id = "967a2690a1c361997fbf9998306755ff"
 name = "prepaid-discount-app"
 handle = "prepaid-discount-app"
 application_url = "http://localhost:3000"
