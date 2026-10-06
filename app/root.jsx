@@ -11,8 +11,15 @@ import { json } from "@remix-run/node";
 import { addDocumentResponseHeaders } from "./shopify.server";
 
 // Allow Shopify Admin iframe embedding (CSP frame-ancestors).
+// NOTE: addDocumentResponseHeaders returns a Headers object, but Remix
+// `headers` export must return a plain object — convert explicitly.
 export const headers = (headersArgs) => {
-  return addDocumentResponseHeaders(headersArgs);
+  const shopifyHeaders = addDocumentResponseHeaders(headersArgs);
+  const out = {};
+  shopifyHeaders.forEach((value, key) => {
+    out[key] = value;
+  });
+  return out;
 };
 
 // Root loader always returns valid JSON, even while env/session-token init

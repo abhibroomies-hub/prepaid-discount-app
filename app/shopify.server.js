@@ -1,3 +1,4 @@
+import "@shopify/shopify-app-remix/server/adapters/vercel";
 import { shopifyApp } from "@shopify/shopify-app-remix/server";
 import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
 

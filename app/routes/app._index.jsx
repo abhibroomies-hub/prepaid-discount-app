@@ -7,8 +7,15 @@ import {
 import { DEFAULT_CONFIG } from "../prepaid-discount-config.js";
 
 // Allow Shopify Admin iframe embedding (CSP frame-ancestors).
+// NOTE: addDocumentResponseHeaders returns a Headers object, but Remix
+// `headers` export must return a plain object — convert explicitly.
 export const headers = (headersArgs) => {
-  return addDocumentResponseHeaders(headersArgs);
+  const shopifyHeaders = addDocumentResponseHeaders(headersArgs);
+  const out = {};
+  shopifyHeaders.forEach((value, key) => {
+    out[key] = value;
+  });
+  return out;
 };
 
 // ---------- Loader: read current config from shop metafield ----------
